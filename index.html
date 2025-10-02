@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alberto Moraglio - Publications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header {
+            margin-bottom: 40px;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #666;
+        }
+        
+        .controls {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            border: 2px solid #3498db;
+            background: white;
+            color: #3498db;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        .filter-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .stats {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .year-section {
+            margin-bottom: 40px;
+        }
+        
+        .year-header {
+            font-size: 1.8em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .publication {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #fafafa;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s;
+        }
+        
+        .publication:hover {
+            background: #f0f8ff;
+            transform: translateX(5px);
+        }
+        
+        .pub-type {
+            display: inline-block;
+            padding: 3px 10px;
+            background: #3498db;
+            color: white;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .pub-type.journal { background: #27ae60; }
+        .pub-type.conf { background: #3498db; }
+        .pub-type.book { background: #e74c3c; }
+        .pub-type.thesis { background: #9b59b6; }
+        .pub-type.other { background: #95a5a6; }
+        
+        .pub-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 8px 0;
+        }
+        
+        .pub-authors {
+            color: #555;
+            font-style: italic;
+            margin: 5px 0;
+        }
+        
+        .pub-venue {
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .pub-links {
+            margin-top: 10px;
+        }
+        
+        .pub-link {
+            display: inline-block;
+            padding: 5px 12px;
+            margin-right: 8px;
+            background: #ecf0f1;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .pub-link:hover {
+            background: #3498db;
+            color: white;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Alberto Moraglio</h1>
+            <div class="subtitle">Publications in Computer Science, Optimization & Machine Learning</div>
+        </header>
+        
+        <div class="controls">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search publications by title, author, or keyword...">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-type="all">All</button>
+                <button class="filter-btn" data-type="journal">Journals</button>
+                <button class="filter-btn" data-type="conf">Conferences</button>
+                <button class="filter-btn" data-type="book">Books</button>
+            </div>
+        </div>
+        
+        <div class="stats" id="stats">
+            Loading publications...
+        </div>
+        
+        <div id="publications">
+            <!-- Publications will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        // Configuration: path to your BibTeX file
+        const BIB_FILE_PATH = 'publications.bib';
+        
+        async function loadBibTeX() {
+            try {
+                const response = await fetch(BIB_FILE_PATH);
+                if (!response.ok) {
+                    throw new Error(`Failed to load ${BIB_FILE_PATH}: ${response.statusText}`);
+                }
+                const bibData = await response.text();
+                const publications = parseBibTeX(bibData);
+                renderPublications(publications);
+                setupEventListeners(publications);
+            } catch (error) {
+                document.getElementById('publications').innerHTML = 
+                    `<div class="no-results">Error loading publications: ${error.message}<br>
+                    Make sure your BibTeX file is named "${BIB_FILE_PATH}" and is in the same directory as this HTML file.</div>`;
+                console.error('Error loading BibTeX:', error);
+            }
+        }
+
+        function parseBibTeX(bibtext) {
+            const entries = [];
+            const entryRegex = /@(\w+)\{([^,]+),\s*([\s\S]*?)\n\}/g;
+            let match;
+            
+            while ((match = entryRegex.exec(bibtext)) !== null) {
+                const type = match[1];
+                const key = match[2];
+                const fields = match[3];
+                
+                const entry = { type, key };
+                
+                const fieldRegex = /(\w+)\s*=\s*\{([^}]*)\}|(\w+)\s*=\s*"([^"]*)"/g;
+                let fieldMatch;
+                
+                while ((fieldMatch = fieldRegex.exec(fields)) !== null) {
+                    const fieldName = fieldMatch[1] || fieldMatch[3];
+                    const fieldValue = fieldMatch[2] || fieldMatch[4];
+                    entry[fieldName] = fieldValue;
+                }
+                
+                entries.push(entry);
+            }
+            
+            return entries;
+        }
+        
+        function getPublicationType(entry) {
+            const type = entry.type.toLowerCase();
+            if (type.includes('article')) return 'journal';
+            if (type.includes('inproceedings')) return 'conf';
+            if (type.includes('book') || type.includes('proceedings') || type.includes('incollection')) return 'book';
+            if (type.includes('thesis')) return 'thesis';
+            return 'other';
+        }
+        
+        function getTypeLabel(type) {
+            const labels = {
+                'journal': 'Journal',
+                'conf': 'Conference',
+                'book': 'Book/Chapter',
+                'thesis': 'PhD Thesis',
+                'other': 'Other'
+            };
+            return labels[type] || 'Publication';
+        }
+        
+        function formatAuthors(authors) {
+            if (!authors) return '';
+            return authors.replace(/ and /g, ', ');
+        }
+        
+        function formatVenue(entry) {
+            const parts = [];
+            
+            if (entry.journal) {
+                parts.push(entry.journal);
+                if (entry.volume) {
+                    let vol = `${entry.volume}`;
+                    if (entry.number) vol += `(${entry.number})`;
+                    parts.push(vol);
+                }
+            } else if (entry.booktitle) {
+                parts.push(entry.booktitle);
+                if (entry.series) parts.push(entry.series);
+            } else if (entry.school) {
+                parts.push(entry.school);
+            }
+            
+            if (entry.pages) parts.push(`pp. ${entry.pages.replace('--', '–')}`);
+            if (entry.publisher) parts.push(entry.publisher);
+            
+            return parts.join(', ');
+        }
+        
+        function renderPublications(entries, filterType = 'all', searchTerm = '') {
+            const filtered = entries.filter(entry => {
+                const type = getPublicationType(entry);
+                const typeMatch = filterType === 'all' || type === filterType;
+                
+                if (!typeMatch) return false;
+                
+                if (searchTerm) {
+                    const searchLower = searchTerm.toLowerCase();
+                    const title = (entry.title || '').toLowerCase();
+                    const authors = (entry.author || '').toLowerCase();
+                    const venue = formatVenue(entry).toLowerCase();
+                    return title.includes(searchLower) || authors.includes(searchLower) || venue.includes(searchLower);
+                }
+                
+                return true;
+            });
+            
+            // Group by year
+            const byYear = {};
+            filtered.forEach(entry => {
+                const year = entry.year || 'Unknown';
+                if (!byYear[year]) byYear[year] = [];
+                byYear[year].push(entry);
+            });
+            
+            // Sort years descending
+            const years = Object.keys(byYear).sort((a, b) => b - a);
+            
+            const pubDiv = document.getElementById('publications');
+            
+            if (years.length === 0) {
+                pubDiv.innerHTML = '<div class="no-results">No publications found matching your criteria.</div>';
+                return;
+            }
+            
+            let html = '';
+            years.forEach(year => {
+                html += `<div class="year-section">`;
+                html += `<h2 class="year-header">${year}</h2>`;
+                
+                byYear[year].forEach(entry => {
+                    const type = getPublicationType(entry);
+                    const typeLabel = getTypeLabel(type);
+                    const dblpKey = entry.key.replace('DBLP:', '');
+                    
+                    html += `<div class="publication">`;
+                    html += `<span class="pub-type ${type}">${typeLabel}</span>`;
+                    html += `<div class="pub-title">${entry.title || 'Untitled'}</div>`;
+                    html += `<div class="pub-authors">${formatAuthors(entry.author || entry.editor)}</div>`;
+                    html += `<div class="pub-venue">${formatVenue(entry)}, ${entry.year}</div>`;
+                    html += `<div class="pub-links">`;
+                    html += `<a href="https://dblp.org/rec/${dblpKey}.html" target="_blank" class="pub-link">DBLP</a>`;
+                    // Add PDF link placeholder - users can add their PDFs
+                    // html += `<a href="${entry.key}.pdf" class="pub-link">PDF</a>`;
+                    html += `</div>`;
+                    html += `</div>`;
+                });
+                
+                html += `</div>`;
+            });
+            
+            pubDiv.innerHTML = html;
+            
+            // Update stats
+            const stats = {};
+            filtered.forEach(entry => {
+                const type = getPublicationType(entry);
+                stats[type] = (stats[type] || 0) + 1;
+            });
+            
+            const statsText = `Showing ${filtered.length} of ${entries.length} publications | ` +
+                `Journals: ${stats.journal || 0} | Conferences: ${stats.conf || 0} | Books/Chapters: ${stats.book || 0}`;
+            
+            document.getElementById('stats').textContent = statsText;
+        }
+        
+        function setupEventListeners(publications) {
+            // Search functionality
+            document.getElementById('searchBox').addEventListener('input', (e) => {
+                const activeFilter = document.querySelector('.filter-btn.active').dataset.type;
+                renderPublications(publications, activeFilter, e.target.value);
+            });
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    const searchTerm = document.getElementById('searchBox').value;
+                    renderPublications(publications, btn.dataset.type, searchTerm);
+                });
+            });
+        }
+        
+        // Initialize - load BibTeX file when page loads
+        loadBibTeX();
+    </script>
+</body>
+</html>
